@@ -13,7 +13,7 @@ export const Http = {
         const query = API_KEY ? `?${stringify(paramsWithKey)}` : params ? `?${stringify(paramsWithKey)}` : "";
 
         return new Promise((resolve, reject) => {
-             fetch(`${BaseUrl}${url}${query.length}`, {
+             fetch(`${BaseUrl}${url}${query}`, {
                     body: JSON.stringify(payload),
                     cache: 'no-cache',
                     headers: {
