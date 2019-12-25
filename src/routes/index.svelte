@@ -1,50 +1,72 @@
+<script context="module">
+    import { Http } from "@Services";
+
+    export function preload({ params, query }) {
+        return Http.Request("GET", "/planetary/apod", undefined, undefined)
+            .then(apod => {
+                return { apod };
+            })
+            .catch(e => console.log(e));
+    }
+</script>
+
+<script>
+    import { HelloWorld } from "@Components";
+
+    export let apod;
+</script>
+
 <style>
-    h1,
-    figure,
-    p {
-        text-align: center;
-        margin: 0 auto;
+    .home {
+        padding: 100px 0;
+        width: 100vw;
+        min-height: 100vh;
+        background: radial-gradient(
+            circle,
+            rgba(48, 65, 82, 1) 0%,
+            rgba(44, 62, 80, 1) 26%,
+            rgba(21, 35, 50, 1) 100%
+        );
+        display: flex;
+        flex-flow: column;
+        justify-content: space-between;
+        align-items: center;
+        color: white;
     }
 
-    h1 {
-        font-size: 2.8em;
-        text-transform: uppercase;
-        font-weight: 700;
-        margin: 0 0 0.5em 0;
+    .logo {
+        margin-bottom: 100px;
     }
 
-    figure {
-        margin: 0 0 1em 0;
+    .apod {
+        margin-top: 100px;
+        width: 315px;
+        display: flex;
+        flex-flow: column;
+        justify-content: center;
+        align-items: center;
     }
 
-    img {
-        width: 100%;
-        max-width: 400px;
-        margin: 0 0 1em 0;
-    }
-
-    p {
-        margin: 1em auto;
-    }
-
-    @media (min-width: 480px) {
-        h1 {
-            font-size: 4em;
-        }
+    .copyright {
+        font-style: italic;
+        font-size: 14px;
     }
 </style>
 
 <svelte:head>
-    <title>Sapper project template</title>
+    <title>Pankod Sapper Boilerplate</title>
 </svelte:head>
 
-<h1>Great success!</h1>
-
-<figure>
-    <img alt="Borat" src="great-success.png" />
-    <figcaption>HIGH FIVE!</figcaption>
-</figure>
-
-<p>
-    <strong>Try editing this file (src/routes/index.svelte) to test live reloading.</strong>
-</p>
+<div class="home">
+    <div class="logo">
+        <img alt="logo" src="images/pankod-logo.png" />
+    </div>
+    <HelloWorld />
+    <div class="apod">
+        <img alt={apod.copyright} src={apod.url} />
+        <p>
+            {apod.title}
+            <span class="copyright">{apod.copyright}</span>
+        </p>
+    </div>
+</div>
