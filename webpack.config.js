@@ -8,10 +8,20 @@ const dev = mode === "development";
 
 const alias = { 
     svelte: path.resolve("node_modules", "svelte"),
-    '@Services': path.resolve(__dirname, 'src/services/')
+    '@Services': path.resolve(__dirname, 'src/services/'),
+    '@Components': path.resolve(__dirname, 'src/components/')
 };
 const extensions = [".mjs", ".js", ".json", ".svelte", ".html"];
 const mainFields = ["svelte", "module", "browser", "main"];
+
+const sveltePreprocess = require("svelte-preprocess");
+
+const preprocess = sveltePreprocess({
+  postcss: {
+    plugins: [require("autoprefixer")]
+  },
+  scss: true,
+});
 
 module.exports = {
     client: {
@@ -27,7 +37,8 @@ module.exports = {
                         options: {
                             dev,
                             hydratable: true,
-                            hotReload: false, // pending https://github.com/sveltejs/svelte/issues/2377
+                            hotReload: false, // pending https://github.com/sveltejs/svelte/issues/2377,
+                            preprocess
                         },
                     },
                 },
@@ -40,7 +51,7 @@ module.exports = {
             new webpack.DefinePlugin({
                 "process.browser": true,
                 "process.env.NODE_ENV": JSON.stringify(mode),
-            }),
+            })
         ].filter(Boolean),
         devtool: dev && "inline-source-map",
     },
@@ -61,6 +72,7 @@ module.exports = {
                             css: false,
                             generate: "ssr",
                             dev,
+                            preprocess
                         },
                     },
                 },
@@ -69,9 +81,8 @@ module.exports = {
         mode: process.env.NODE_ENV,
         performance: {
             hints: false, // it doesn't matter if server.js is large
-        },
+        }
     },
-
     serviceworker: {
         entry: config.serviceworker.entry(),
         output: config.serviceworker.output(),
