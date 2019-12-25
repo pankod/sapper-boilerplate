@@ -2,7 +2,7 @@
     import { Http } from "@Services";
 
     export function preload({ params, query }) {
-        return Http.Request("GET", "/api/planetary/apod", undefined, undefined)
+        return Http.Request("GET", "/api/planetary/apod", { api_key: true }, undefined)
             .then(apod => {
                 return { apod };
             })

@@ -7,10 +7,10 @@ require('isomorphic-fetch');
 
 export const Http = {
     Request: async (methodType, url, params, payload) => {
-        const BaseUrl = `${process.env.API_URL}`;
+        const BaseUrl = process.env.API_URL;
         const API_KEY = process.env.API_KEY;
-        const paramsWithKey = {...params, api_key: API_KEY};
-        const query = API_KEY ? `?${stringify(paramsWithKey)}` : params ? `?${stringify(paramsWithKey)}` : "";
+
+        const query = params ? `?${stringify(params.api_key ? {...params, api_key: API_KEY} : params)}` : "";
 
         return new Promise((resolve, reject) => {
              fetch(`${BaseUrl}${url}${query}`, {
