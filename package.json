@@ -15,7 +15,8 @@
     "cy:run": "cypress run",
     "cy:open": "cypress open",
     "test": "run-p --race dev cy:run",
-    "format": "prettier --write {cypress,src}/**/*.{js,svelte}"
+    "format": "prettier --write {cypress,src}/**/*.{js,svelte}",
+    "sb": "start-storybook"
   },
   "dependencies": {
     "@babel/polyfill": "^7.7.0",
@@ -31,8 +32,18 @@
   "devDependencies": {
     "@babel/core": "^7.7.7",
     "@babel/preset-env": "^7.7.7",
+    "@storybook/addon-actions": "^5.2.8",
+    "@storybook/addon-backgrounds": "^5.2.8",
+    "@storybook/addon-knobs": "^5.2.8",
+    "@storybook/addon-links": "^5.2.8",
+    "@storybook/addon-storysource": "^5.2.8",
+    "@storybook/addon-viewport": "^5.2.8",
+    "@storybook/preset-scss": "^1.0.2",
+    "@storybook/svelte": "^5.2.8",
     "autoprefixer": "^9.7.3",
+    "babel-loader": "^8.0.6",
     "babel-plugin-add-module-exports": "^1.0.2",
+    "css-loader": "^3.4.0",
     "cypress": "^3.8.0",
     "eslint": "^6.8.0",
     "eslint-config-prettier": "^6.7.0",
@@ -43,9 +54,12 @@
     "prettier": "^1.19.1",
     "prettier-plugin-svelte": "^0.7.0",
     "sapper": "^0.27.0",
+    "sass-loader": "^8.0.0",
+    "style-loader": "^1.1.1",
     "svelte": "^3.0.0",
     "svelte-loader": "^2.9.0",
     "svelte-preprocess": "^3.3.0",
-    "webpack": "^4.7.0"
+    "webpack": "^4.7.0",
+    "webpack-merge": "^4.2.2"
   }
 }
