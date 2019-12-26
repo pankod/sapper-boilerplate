@@ -1,10 +1,11 @@
 <script context="module">
     import { Http } from "@Services";
+    import { apod } from "@Store";
 
     export function preload({ params, query }) {
         return Http.Request("GET", "/api/planetary/apod", { api_key: true }, undefined)
-            .then(apod => {
-                return { apod };
+            .then(result => {
+                return { apodResult: result };
             })
             .catch(e => console.log(e));
     }
@@ -13,7 +14,8 @@
 <script>
     import { HelloWorld } from "@Components";
 
-    export let apod;
+    export let apodResult;
+    apod.set(apodResult);
 </script>
 
 <style>
@@ -63,10 +65,12 @@
     </div>
     <HelloWorld />
     <div class="apod">
-        <img alt={apod.copyright} src={apod.url} data-cy="ApodImage" />
-        <p>
-            {apod.title}
-            <span class="copyright">{apod.copyright}</span>
-        </p>
+        {#if $apod}
+            <img alt={$apod.copyright} src={$apod.url} data-cy="ApodImage" />
+            <p>
+                {$apod.title}
+                <span class="copyright">{$apod.copyright}</span>
+            </p>
+        {/if}
     </div>
 </div>
