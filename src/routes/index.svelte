@@ -58,12 +58,12 @@
 </svelte:head>
 
 <div class="home">
-    <div class="logo">
+    <div class="logo" data-cy="PankodLogo">
         <img alt="logo" src="images/pankod-logo.png" />
     </div>
     <HelloWorld />
     <div class="apod">
-        <img alt={apod.copyright} src={apod.url} />
+        <img alt={apod.copyright} src={apod.url} data-cy="ApodImage" />
         <p>
             {apod.title}
             <span class="copyright">{apod.copyright}</span>
