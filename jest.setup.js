@@ -5,11 +5,9 @@ import { cleanup } from '@testing-library/svelte'
 
 dotenv.config({path: './.test.env'});
 
-beforeEach(cleanup)
+beforeEach(cleanup);
 
-const baseUrl = process.env.API_URL;
-
-nock(baseUrl)
+nock("http://localhost:3000")
 	.get('/api/link/')
 	.reply(200, [
 		{
@@ -22,10 +20,24 @@ nock(baseUrl)
 		}
 	]);
 
-nock(baseUrl)
+nock("http://localhost:3000")
 	.get('/200')
 	.reply(200, { success: true });
 
-nock(baseUrl)
+nock("http://localhost:3000")
 	.get('/404')
-	.reply(404, { success: false });
+    .reply(404, { success: false });
+    
+nock("http://localhost:3000")
+    .get("/api/planetary/apod")
+    .query({ api_key: "NNKOjkoul8n1CH18TWA9gwngW1s1SmjESPjNoUFo"})
+    .reply(200, {
+        copyright: "Pankod",
+        date: "2019-05-23",
+        explanation: "",
+        hdurl: "",
+        media_type: "",
+        service_version: "",
+        title: "",
+        url: "",
+    });

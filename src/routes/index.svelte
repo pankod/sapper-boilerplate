@@ -1,9 +1,8 @@
 <script context="module">
-    import { Http } from "@Services";
-    import { apod } from "@Store";
+    import { PlanetaryService } from "@Services";
 
     export function preload({ params, query }) {
-        return Http.Request("GET", "/api/planetary/apod", { api_key: true }, undefined)
+        return PlanetaryService.GetApod()
             .then(result => {
                 return { apodResult: result };
             })
@@ -13,6 +12,7 @@
 
 <script>
     import { HelloWorld } from "@Components";
+    import { apod } from "@Store";
 
     export let apodResult;
     apod.set(apodResult);

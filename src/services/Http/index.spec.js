@@ -1,22 +1,22 @@
-import { Http } from './index';
+import { Http } from "./index";
 
-describe('Http request tests', () => {
-    test('200 test', async () => {
-        const result = await Http.Request('GET', '/200');
+describe("Http request tests", () => {
+    test("200 test", async () => {
+        const result = await Http.Request("GET", "/200");
         expect(result.success).toEqual(true);
     });
 
-    test('404 test', async () => {
+    test("404 test", async () => {
         try {
-            await Http.Request('GET', '/404');
+            await Http.Request("GET", "/404");
         } catch (error) {
             expect(error.status).toEqual(404);
         }
     });
 
-    test('Catch test', async () => {
+    test("Catch test", async () => {
         try {
-            await Http.Request('GET', '');
+            await Http.Request("GET", "");
         } catch (error) {
             expect(error.code).toBeUndefined();
         }
