@@ -3,8 +3,8 @@
 
     export function preload({ params, query }) {
         return PlanetaryService.GetApod()
-            .then(result => {
-                return { apodResult: result };
+            .then(apod => {
+                return { apod };
             })
             .catch(e => console.log(e));
     }
@@ -12,10 +12,37 @@
 
 <script>
     import { HelloWorld } from "@Components";
-    import { apod } from "@Store";
+    import { imageUrl, imageTitle, copyright, photoOfTheDay } from "@Store";
 
-    export let apodResult;
-    apod.set(apodResult);
+    // #region props
+    export let apod;
+    // #endregion props
+
+    const setCurrentImage = image => {
+        imageUrl.set(image.url);
+        imageTitle.set(image.title);
+        copyright.set(image.copyright);
+    };
+
+    if (apod) {
+        setCurrentImage(apod);
+        photoOfTheDay.set(apod);
+    }
+
+    let searchTerm = "";
+
+    const makeSearch = async () => {
+        if (searchTerm) {
+            PlanetaryService.Search(searchTerm)
+                .then(result => {
+                    //const images = result.collection.items;
+                    console.log("result: ", result);
+                })
+                .catch(e => console.log("err: ", e));
+        }
+    };
+
+    const showApod = () => {};
 </script>
 
 <style>
@@ -40,7 +67,7 @@
         margin-bottom: 100px;
     }
 
-    .apod {
+    .planetary {
         margin-top: 100px;
         width: 315px;
         display: flex;
@@ -64,12 +91,17 @@
         <img alt="logo" src="images/pankod-logo.png" />
     </div>
     <HelloWorld />
-    <div class="apod">
-        {#if $apod}
-            <img alt={$apod.copyright} src={$apod.url} data-cy="ApodImage" />
+    <div class="planetary">
+
+        <input type="text" bind:value={searchTerm} />
+        <button on:click={makeSearch}>Search</button>
+        <button on:click={showApod}>Photo of the Day</button>
+
+        {#if $imageUrl}
+            <img alt={$imageTitle} src={$imageUrl} data-cy="PlanetaryImage" />
             <p>
-                {$apod.title}
-                <span class="copyright">{$apod.copyright}</span>
+                {$imageTitle}
+                <span class="copyright">{$copyright}</span>
             </p>
         {/if}
     </div>

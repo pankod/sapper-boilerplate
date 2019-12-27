@@ -1,5 +1,11 @@
 import { writable } from 'svelte/store';
 
-export const apod = writable();
+export const photoOfTheDay = writable();
+
+export const imageUrl = writable();
+
+export const imageTitle = writable("");
+
+export const copyright = writable("");
 
 export const searchTerm = writable("");
