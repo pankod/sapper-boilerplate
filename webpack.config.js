@@ -24,6 +24,8 @@ const preprocess = sveltePreprocess({
   scss: true,
 });
 
+const helper = require("./src/helpers/config.js");
+
 module.exports = {
     client: {
         entry: config.client.entry(),
@@ -50,8 +52,9 @@ module.exports = {
             // pending https://github.com/sveltejs/svelte/issues/2377
             // dev && new webpack.HotModuleReplacementPlugin(),
             new webpack.DefinePlugin({
-                "process.browser": true,
-                "process.env.NODE_ENV": JSON.stringify(mode),
+                ...helper.getEnvVars(),
+                'process.browser': true,
+                'process.env.NODE_ENV': JSON.stringify(mode)
             })
         ].filter(Boolean),
         devtool: dev && "inline-source-map",
@@ -79,7 +82,7 @@ module.exports = {
                 },
             ],
         },
-        mode: process.env.NODE_ENV,
+        mode,
         performance: {
             hints: false, // it doesn't matter if server.js is large
         }
