@@ -5,6 +5,7 @@ exports[`Hello World renders Hello World! text 1`] = `
   <div>
     <div
       class="title"
+      data-cy="HelloWorld"
     >
       <span
         class="title__top"
