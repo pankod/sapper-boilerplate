@@ -1,13 +1,12 @@
 module.exports = {
     getEnvVars: () => {
         const dotenv = require("dotenv");
-        dotenv.config();
-    
-        const envVars = ["API_URL", "API_KEY"];
-    
-        return envVars.reduce((pre, curr) => { 
-            return {
-                ...pre,
+        const env = dotenv.config();
+        const keys = Object.keys(env.parsed);
+
+        return keys.reduce((pre, curr) => { 
+            return  {
+            ...pre,
                 [`process.env.${curr}`]: JSON.stringify(process.env[curr])
             };
         }, {});
