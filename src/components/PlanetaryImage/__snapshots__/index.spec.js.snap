@@ -1,0 +1,37 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`PlanetaryImage matches snapshot 1`] = `
+<body>
+  <div>
+    <div
+      class="planetary"
+    >
+      <div
+        class="planetary__form"
+      >
+        <div>
+          <input
+            data-cy="SearchInput"
+            type="text"
+          />
+           
+          <button
+            data-cy="SearchButton"
+          >
+            Search
+          </button>
+        </div>
+         
+        <div>
+          <button
+            data-cy="ApodButton"
+          >
+            Photo of the Day
+          </button>
+        </div>
+      </div>
+       
+    </div>
+  </div>
+</body>
+`;
