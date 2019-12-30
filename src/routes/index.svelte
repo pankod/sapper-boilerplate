@@ -11,33 +11,43 @@
 </script>
 
 <script>
+    // #region Imports
     import { HelloWorld } from "@Components";
     import {
         imageUrl,
         imageTitle,
+        imageType,
         copyright,
         photoOfTheDay,
         searchResults,
         searchTerm,
     } from "@Store";
+    // #endregion Imports
 
-    // #region props
+    // #region Props
     export let apod;
-    // #endregion props
+    // #endregion Props
 
     const setCurrentImage = image => {
         imageUrl.set(image.url);
         imageTitle.set(image.title);
+        imageType.set(image.type);
         copyright.set(image.copyright);
     };
 
     if (apod && apod.url) {
+        apod.type = "apod";
         photoOfTheDay.set(apod);
         setCurrentImage(apod);
     }
 
     let keyword = "";
 
+    const showApod = () => {
+        keyword = "";
+        setCurrentImage($photoOfTheDay);
+    };
+    
     const makeSearch = async () => {
         if (keyword) {
             if (keyword === $searchTerm && $searchResults.length) {
@@ -46,28 +56,28 @@
                 searchTerm.set(keyword);
                 PlanetaryService.Search(keyword)
                     .then(result => {
-                        const items = result.collection.items.filter(i => {
-                            return i.data[0].media_type === "image";
-                        });
+                        const items = result.collection.items.filter(
+                            i => i.data[0].media_type === "image",
+                        );
                         showRandomResult(items);
                         searchResults.set(items);
                     })
                     .catch(e => console.log("err: ", e));
             }
         } else {
-            setCurrentImage($photoOfTheDay);
+            showApod();
         }
     };
 
     const showRandomResult = items => {
         const randomIndex = Math.round(Math.random() * items.length);
         const randomItem = items[randomIndex];
-        console.log(randomItem);
         const { photographer, secondary_creator, title } = randomItem.data[0];
         const image = {
             url: randomItem.links[0].href,
             title,
             copyright: photographer || secondary_creator || "",
+            type: "search",
         };
         setCurrentImage(image);
     };
@@ -130,18 +140,22 @@
 </svelte:head>
 
 <div class="home">
-    <div class="logo" data-cy="PankodLogo">
-        <img alt="logo" src="images/pankod-logo.png" />
+    <div class="logo">
+        <img alt="logo" src="images/pankod-logo.png" data-cy="PankodLogo" />
     </div>
     <HelloWorld />
     <div class="planetary">
         <div class="form">
-            <input type="text" bind:value={keyword} />
-            <button on:click={makeSearch}>Search</button>
-            <button on:click={() => setCurrentImage($photoOfTheDay)}>Photo of the Day</button>
+            <input type="text" bind:value={keyword} data-cy="SearchInput" />
+            <button on:click={makeSearch} data-cy="SearchButton">Search</button>
+            <button on:click={showApod} data-cy="ApodButton">Photo of the Day</button>
         </div>
         {#if $imageUrl}
-            <img alt={$imageTitle} src={$imageUrl} data-cy="PlanetaryImage" />
+            <img
+                alt={$imageTitle}
+                src={$imageUrl}
+                data-cy="PlanetaryImage"
+                data-type={$imageType} />
             <div class="description">
                 {$imageTitle}
                 <span class="copyright">{$copyright}</span>

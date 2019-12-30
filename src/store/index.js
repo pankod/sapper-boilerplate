@@ -6,6 +6,8 @@ export const imageUrl = writable();
 
 export const imageTitle = writable("");
 
+export const imageType = writable("");
+
 export const copyright = writable("");
 
 export const searchTerm = writable("");
