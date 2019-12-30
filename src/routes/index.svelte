@@ -12,16 +12,8 @@
 
 <script>
     // #region Imports
-    import { HelloWorld } from "@Components";
-    import {
-        imageUrl,
-        imageTitle,
-        imageType,
-        copyright,
-        photoOfTheDay,
-        searchResults,
-        searchTerm,
-    } from "@Store";
+    import { HelloWorld, PlanetaryImage } from "@Components";
+    import { imageUrl, imageTitle, imageType, copyright, photoOfTheDay } from "@Store";
     // #endregion Imports
 
     // #region Props
@@ -40,52 +32,11 @@
         photoOfTheDay.set(apod);
         setCurrentImage(apod);
     }
-
-    let keyword = "";
-
-    const showApod = () => {
-        keyword = "";
-        setCurrentImage($photoOfTheDay);
-    };
-    
-    const makeSearch = async () => {
-        if (keyword) {
-            if (keyword === $searchTerm && $searchResults.length) {
-                showRandomResult($searchResults);
-            } else {
-                searchTerm.set(keyword);
-                PlanetaryService.Search(keyword)
-                    .then(result => {
-                        const items = result.collection.items.filter(
-                            i => i.data[0].media_type === "image",
-                        );
-                        showRandomResult(items);
-                        searchResults.set(items);
-                    })
-                    .catch(e => console.log("err: ", e));
-            }
-        } else {
-            showApod();
-        }
-    };
-
-    const showRandomResult = items => {
-        const randomIndex = Math.round(Math.random() * items.length);
-        const randomItem = items[randomIndex];
-        const { photographer, secondary_creator, title } = randomItem.data[0];
-        const image = {
-            url: randomItem.links[0].href,
-            title,
-            copyright: photographer || secondary_creator || "",
-            type: "search",
-        };
-        setCurrentImage(image);
-    };
 </script>
 
-<style>
+<style lang="scss">
     .home {
-        padding: 100px 0;
+        padding: 60px 0;
         width: 100vw;
         min-height: 100vh;
         background: radial-gradient(
@@ -96,42 +47,13 @@
         );
         display: flex;
         flex-flow: column;
-        justify-content: space-between;
         align-items: center;
         color: white;
+        font-family: Arial;
     }
 
     .logo {
-        margin-bottom: 100px;
-    }
-
-    .planetary {
-        margin-top: 100px;
-        width: 315px;
-        display: flex;
-        flex-flow: column;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .description {
-        width: 100%;
-        margin-top: 5px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .copyright {
-        font-style: italic;
-        font-size: 14px;
-    }
-
-    .form {
-        width: 100%;
-        margin-bottom: 5px;
-        display: flex;
-        justify-content: space-between;
+        margin-bottom: 50px;
     }
 </style>
 
@@ -144,22 +66,5 @@
         <img alt="logo" src="images/pankod-logo.png" data-cy="PankodLogo" />
     </div>
     <HelloWorld />
-    <div class="planetary">
-        <div class="form">
-            <input type="text" bind:value={keyword} data-cy="SearchInput" />
-            <button on:click={makeSearch} data-cy="SearchButton">Search</button>
-            <button on:click={showApod} data-cy="ApodButton">Photo of the Day</button>
-        </div>
-        {#if $imageUrl}
-            <img
-                alt={$imageTitle}
-                src={$imageUrl}
-                data-cy="PlanetaryImage"
-                data-type={$imageType} />
-            <div class="description">
-                {$imageTitle}
-                <span class="copyright">{$copyright}</span>
-            </div>
-        {/if}
-    </div>
+    <PlanetaryImage {setCurrentImage} />
 </div>
