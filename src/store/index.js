@@ -9,3 +9,5 @@ export const imageTitle = writable("");
 export const copyright = writable("");
 
 export const searchTerm = writable("");
+
+export const searchResults = writable([]);

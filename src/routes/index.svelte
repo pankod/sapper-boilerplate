@@ -12,7 +12,14 @@
 
 <script>
     import { HelloWorld } from "@Components";
-    import { imageUrl, imageTitle, copyright, photoOfTheDay } from "@Store";
+    import {
+        imageUrl,
+        imageTitle,
+        copyright,
+        photoOfTheDay,
+        searchResults,
+        searchTerm,
+    } from "@Store";
 
     // #region props
     export let apod;
@@ -24,25 +31,46 @@
         copyright.set(image.copyright);
     };
 
-    if (apod) {
-        setCurrentImage(apod);
+    if (apod && apod.url) {
         photoOfTheDay.set(apod);
+        setCurrentImage(apod);
     }
 
-    let searchTerm = "";
+    let keyword = "";
 
     const makeSearch = async () => {
-        if (searchTerm) {
-            PlanetaryService.Search(searchTerm)
-                .then(result => {
-                    //const images = result.collection.items;
-                    console.log("result: ", result);
-                })
-                .catch(e => console.log("err: ", e));
+        if (keyword) {
+            if (keyword === $searchTerm && $searchResults.length) {
+                showRandomResult($searchResults);
+            } else {
+                searchTerm.set(keyword);
+                PlanetaryService.Search(keyword)
+                    .then(result => {
+                        const items = result.collection.items.filter(i => {
+                            return i.data[0].media_type === "image";
+                        });
+                        showRandomResult(items);
+                        searchResults.set(items);
+                    })
+                    .catch(e => console.log("err: ", e));
+            }
+        } else {
+            setCurrentImage($photoOfTheDay);
         }
     };
 
-    const showApod = () => {};
+    const showRandomResult = items => {
+        const randomIndex = Math.round(Math.random() * items.length);
+        const randomItem = items[randomIndex];
+        console.log(randomItem);
+        const { photographer, secondary_creator, title } = randomItem.data[0];
+        const image = {
+            url: randomItem.links[0].href,
+            title,
+            copyright: photographer || secondary_creator || "",
+        };
+        setCurrentImage(image);
+    };
 </script>
 
 <style>
@@ -76,9 +104,24 @@
         align-items: center;
     }
 
+    .description {
+        width: 100%;
+        margin-top: 5px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
     .copyright {
         font-style: italic;
         font-size: 14px;
+    }
+
+    .form {
+        width: 100%;
+        margin-bottom: 5px;
+        display: flex;
+        justify-content: space-between;
     }
 </style>
 
@@ -92,17 +135,17 @@
     </div>
     <HelloWorld />
     <div class="planetary">
-
-        <input type="text" bind:value={searchTerm} />
-        <button on:click={makeSearch}>Search</button>
-        <button on:click={showApod}>Photo of the Day</button>
-
+        <div class="form">
+            <input type="text" bind:value={keyword} />
+            <button on:click={makeSearch}>Search</button>
+            <button on:click={() => setCurrentImage($photoOfTheDay)}>Photo of the Day</button>
+        </div>
         {#if $imageUrl}
             <img alt={$imageTitle} src={$imageUrl} data-cy="PlanetaryImage" />
-            <p>
+            <div class="description">
                 {$imageTitle}
                 <span class="copyright">{$copyright}</span>
-            </p>
+            </div>
         {/if}
     </div>
 </div>
