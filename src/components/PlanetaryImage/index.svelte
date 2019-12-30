@@ -144,7 +144,7 @@
         </div>
     </div>
     {#if notFound}
-        <div>No results found for "{keyword}"</div>
+        <div data-cy="StatusMessage">No results found for "{keyword}"</div>
     {:else if $imageUrl}
         <img alt={$imageTitle} src={$imageUrl} data-cy="PlanetaryImage" data-type={$imageType} />
         <div class="description">
