@@ -1,13 +1,14 @@
 import PlanetaryImage from './index.svelte';
-import { render } from '@testing-library/svelte'
+import { render, fireEvent } from '@testing-library/svelte'
+import "../../services/Planetary/Planetary.mocks";
+
+const setImage = jest.fn();
 
 const renderComponent = () => {
     return render(PlanetaryImage, {
-        setCurrentImage: () => {
-            console.log("set current image");
-        }
+        setCurrentImage: setImage
     });
-}
+};
 
 describe('PlanetaryImage', () => {
     it("matches snapshot", () => {
@@ -30,5 +31,16 @@ describe('PlanetaryImage', () => {
         const { container, getAllByText } = renderComponent();
         expect(container.querySelectorAll("button[data-cy='ApodButton']").length).toEqual(1);
         expect(getAllByText("Photo of the Day").length).toEqual(1);
+    });
+
+    it("should make a search request for given keyword", async () => {
+        const { container } = renderComponent();
+        const input = container.querySelector("input");
+        await fireEvent.change(input, {target: {value: 'iapetus'}});
+
+        const searchButton = container.querySelector("button[data-cy='SearchButton']");
+        await fireEvent.click(searchButton);
+
+        expect(setImage).toHaveBeenCalled();
     });
 });
