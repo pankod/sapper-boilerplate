@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import nock from 'nock';
 import { cleanup } from '@testing-library/svelte'
 
-dotenv.config({path: './.test.env'});
+dotenv.config({path: './.env.test'});
 
 beforeEach(cleanup);
 
